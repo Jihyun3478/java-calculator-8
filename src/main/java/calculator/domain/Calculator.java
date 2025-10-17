@@ -1,5 +1,7 @@
 package calculator.domain;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,19 +10,14 @@ import calculator.validator.InputValidator;
 public class Calculator {
     public int calculate(String input) {
         InputValidator.validateInput(input);
+        List<String> extractNumbers = extractNumbers(input);
 
-        String[] splits = extractNumbers(input);
-
-        int sum = 0;
-        for (String split : splits) {
-            if (isNumber(split)) {
-                sum += Integer.parseInt(split);
-            }
-        }
-        return sum;
+        return extractNumbers.stream()
+            .filter(this::isNumber)
+            .mapToInt(Integer::parseInt).sum();
     }
 
-    private String[] extractNumbers(String input) {
+    public List<String> extractNumbers(String input) {
         if (input.contains("\\n")) {
             input = input.replace("\\n", "\n");
         }
@@ -28,10 +25,12 @@ public class Calculator {
         if (input.contains("//") && input.contains("\n")) {
             return extractWithCustomDelimiter(input);
         }
-        return input.splitWithDelimiters("[,:]", 0);
+
+        String[] numbers = input.splitWithDelimiters("[,:]", 0);
+        return Arrays.stream(numbers).toList();
     }
 
-    private String[] extractWithCustomDelimiter(String input) {
+    private List<String> extractWithCustomDelimiter(String input) {
         Pattern pattern = Pattern.compile("//(.*?)\\n");
         Matcher matcher = pattern.matcher(input);
 
@@ -40,7 +39,8 @@ public class Calculator {
             delimiter = matcher.group(1);
         }
         String numbers = input.substring(input.indexOf("\n") + 1);
-        return numbers.splitWithDelimiters("[" + delimiter + "]", 0);
+        String[] splitNumbers = numbers.splitWithDelimiters("[" + delimiter + "]", 0);
+        return Arrays.stream(splitNumbers).toList();
     }
 
     private boolean isNumber(String split) {
