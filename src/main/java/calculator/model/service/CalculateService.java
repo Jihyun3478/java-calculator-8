@@ -1,6 +1,6 @@
-package calculator.service;
+package calculator.model.service;
 
-import calculator.domain.Calculator;
+import calculator.model.domain.Calculator;
 
 public class CalculateService {
     private final Calculator calculator = new Calculator();
