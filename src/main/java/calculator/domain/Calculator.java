@@ -1,12 +1,14 @@
 package calculator.domain;
 
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import calculator.validator.InputValidator;
+
 public class Calculator {
     public int calculate(String input) {
-        validateInput(input);
+        InputValidator.validateInput(input);
+
         String[] splits = extractNumbers(input);
 
         int sum = 0;
@@ -16,34 +18,6 @@ public class Calculator {
             }
         }
         return sum;
-    }
-
-    private void validateInput(String input) {
-        if (Objects.isNull(input) || input.isEmpty()) {
-            throw new IllegalArgumentException("입력값이 비어있습니다.");
-        }
-
-        if (input.contains("0") || input.contains("-1")) {
-            throw new IllegalArgumentException("입력되는 숫자는 양수이어야 합니다.");
-        }
-
-        if (!(input.contains("//") && (input.contains("\n") || input.contains("\\n")))) {
-            validateDefaultFormat(input);
-        }
-    }
-
-    private void validateDefaultFormat(String input) {
-        if (input.matches("[,:]+")) {
-            throw new IllegalArgumentException("구분자만 입력되었습니다.");
-        }
-
-        if (input.matches(".*[^0-9,:].*")) {
-            throw new IllegalArgumentException("잘못된 구분자입니다.");
-        }
-
-        if (input.matches(".*[,:]{2,}.*")) {
-            throw new IllegalArgumentException("잘못된 형식입니다.");
-        }
     }
 
     private String[] extractNumbers(String input) {
@@ -57,7 +31,7 @@ public class Calculator {
         return input.splitWithDelimiters("[,:]", 0);
     }
 
-    private static String[] extractWithCustomDelimiter(String input) {
+    private String[] extractWithCustomDelimiter(String input) {
         Pattern pattern = Pattern.compile("//(.*?)\\n");
         Matcher matcher = pattern.matcher(input);
 
