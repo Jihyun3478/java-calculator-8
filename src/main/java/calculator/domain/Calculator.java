@@ -12,7 +12,7 @@ public class Calculator {
     private static final String NUMBER_REGEX = "[0-9]+";
 
     public int calculate(String input) {
-        InputValidator.validateInput(input);
+        InputValidator.validate(input);
         List<String> extractNumbers = extractNumbers(input);
 
         return extractNumbers.stream()
