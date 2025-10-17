@@ -13,27 +13,25 @@ public class Calculator {
 
     public int calculate(String input) {
         InputValidator.validate(input);
-        List<String> extractNumbers = extractNumbers(input);
+        List<String> extractNumbers = parseNumbers(input);
 
         return extractNumbers.stream()
             .filter(this::isNumber)
             .mapToInt(Integer::parseInt).sum();
     }
 
-    public List<String> extractNumbers(String input) {
+    public List<String> parseNumbers(String input) {
         if (input.contains("\\n")) {
             input = input.replace("\\n", "\n");
         }
 
         if (input.contains("//") && input.contains("\n")) {
-            return extractWithCustomDelimiter(input);
+            return parseWithCustomDelimiter(input);
         }
-
-        String[] numbers = input.splitWithDelimiters("[,:]", 0);
-        return Arrays.stream(numbers).toList();
+        return splitToList(input, "[,:]");
     }
 
-    private List<String> extractWithCustomDelimiter(String input) {
+    private List<String> parseWithCustomDelimiter(String input) {
         Pattern pattern = Pattern.compile(CUSTOM_DELIMITER_REGEX);
         Matcher matcher = pattern.matcher(input);
 
@@ -42,11 +40,15 @@ public class Calculator {
             delimiter = matcher.group(1);
         }
         String numbers = input.substring(input.indexOf("\n") + 1);
-        String[] splitNumbers = numbers.splitWithDelimiters("[" + delimiter + "]", 0);
-        return Arrays.stream(splitNumbers).toList();
+        return splitToList(numbers, "[" + delimiter + "]");
     }
 
     private boolean isNumber(String split) {
         return split.matches(NUMBER_REGEX);
+    }
+
+    private List<String> splitToList(String input, String regex) {
+        String[] numbers = input.splitWithDelimiters(regex, 0);
+        return Arrays.stream(numbers).toList();
     }
 }
