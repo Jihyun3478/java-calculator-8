@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 import calculator.validator.InputValidator;
 
 public class Calculator {
+    private static final String CUSTOM_DELIMITER_REGEX = "//(.*?)\\n";
+    private static final String NUMBER_REGEX = "[0-9]+";
+
     public int calculate(String input) {
         InputValidator.validateInput(input);
         List<String> extractNumbers = extractNumbers(input);
@@ -31,7 +34,7 @@ public class Calculator {
     }
 
     private List<String> extractWithCustomDelimiter(String input) {
-        Pattern pattern = Pattern.compile("//(.*?)\\n");
+        Pattern pattern = Pattern.compile(CUSTOM_DELIMITER_REGEX);
         Matcher matcher = pattern.matcher(input);
 
         String delimiter = "";
@@ -44,6 +47,6 @@ public class Calculator {
     }
 
     private boolean isNumber(String split) {
-        return split.matches("[0-9]+");
+        return split.matches(NUMBER_REGEX);
     }
 }
