@@ -21,9 +21,7 @@ public class Calculator {
     }
 
     public List<String> parseNumbers(String input) {
-        if (input.contains("\\n")) {
-            input = input.replace("\\n", "\n");
-        }
+        input = input.replace("\\n", "\n");
 
         if (input.contains("//") && input.contains("\n")) {
             return parseWithCustomDelimiter(input);
