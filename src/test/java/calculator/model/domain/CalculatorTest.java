@@ -37,6 +37,16 @@ public class CalculatorTest {
         assertEquals(15, result);
     }
 
+    @Test
+    @DisplayName("커스텀 구분자는 숫자도 가능하다.")
+    public void 커스텀_구분자는_숫자도_가능() {
+        String input = "//1\n71819";
+        calculator = new Calculator();
+        int result = calculator.calculate(input);
+
+        assertEquals(24, result);
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     @DisplayName("입력된 값이 없는 경우, 예외가 발생한다.")

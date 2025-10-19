@@ -1,9 +1,9 @@
 package calculator.model.domain;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 
 import calculator.validator.InputValidator;
 
@@ -13,14 +13,14 @@ public class Calculator {
 
     public int calculate(String input) {
         InputValidator.validate(input);
-        List<String> extractNumbers = parseNumbers(input);
+        List<Integer> extractNumbers = parseNumbers(input);
 
         return extractNumbers.stream()
-            .filter(this::isNumber)
-            .mapToInt(Integer::parseInt).sum();
+            .mapToInt(Integer::intValue)
+            .sum();
     }
 
-    public List<String> parseNumbers(String input) {
+    public List<Integer> parseNumbers(String input) {
         input = input.replace("\\n", "\n");
 
         if (input.contains("//") && input.contains("\n")) {
@@ -29,7 +29,7 @@ public class Calculator {
         return splitToList(input, "[,:]");
     }
 
-    private List<String> parseWithCustomDelimiter(String input) {
+    private List<Integer> parseWithCustomDelimiter(String input) {
         Pattern pattern = Pattern.compile(CUSTOM_DELIMITER_REGEX);
         Matcher matcher = pattern.matcher(input);
 
@@ -41,12 +41,16 @@ public class Calculator {
         return splitToList(numbers, "[" + delimiter + "]");
     }
 
-    private boolean isNumber(String split) {
-        return split.matches(NUMBER_REGEX);
+    private List<Integer> splitToList(String input, String regex) {
+        String[] tokens = input.splitWithDelimiters(regex, 0);
+
+        return IntStream.range(0, tokens.length)
+            .filter(i -> i % 2 == 0 && isNumber(tokens[i]))
+            .mapToObj(i -> Integer.parseInt(tokens[i]))
+            .toList();
     }
 
-    private List<String> splitToList(String input, String regex) {
-        String[] numbers = input.splitWithDelimiters(regex, 0);
-        return Arrays.stream(numbers).toList();
+    private boolean isNumber(String split) {
+        return split.matches(NUMBER_REGEX);
     }
 }
