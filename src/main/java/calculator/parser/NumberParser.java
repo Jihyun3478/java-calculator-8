@@ -26,7 +26,10 @@ public class NumberParser {
         while (matcher.find()) {
             delimiter = matcher.group(1);
         }
-        String numbers = input.substring(input.indexOf("\n") + 1);
+
+        int delimiterIndex = input.indexOf("\n");
+        String numbers = input.substring(delimiterIndex + 1);
+
         return splitToList(numbers, "[" + delimiter + "]");
     }
 
