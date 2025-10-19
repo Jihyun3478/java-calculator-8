@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 public class NumberParser {
-    private static final String CUSTOM_DELIMITER_REGEX = "//(.*?)\\n";
+    private static final String CUSTOM_DELIMITER_REGEX = "//(.)\\n";
     private static final String NUMBER_REGEX = "[0-9]+";
     
     public static List<Integer> parseNumbers(String input) {
