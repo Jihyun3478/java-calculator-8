@@ -9,10 +9,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 public class CalculatorTest {
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"1,2:3", "1,2,3", "1:2:3"})
     @DisplayName("기본 구분자로 숫자를 추출해 합을 계산한다.")
-    public void 기본_구분자로_추출해_계산() {
-        String input = "1,2:3";
+    public void 기본_구분자로_추출해_계산(String input) {
         Calculator calculator = Calculator.from(input);
         int result = calculator.calculate();
 
@@ -36,6 +36,13 @@ public class CalculatorTest {
         int result = calculator.calculate();
 
         assertEquals(24, result);
+    }
+
+    @Test
+    @DisplayName("숫자 1개만 입력하면 그 숫자를 반환한다")
+    void 숫자_1개() {
+        Calculator calculator = Calculator.from("5");
+        assertThat(calculator.calculate()).isEqualTo(5);
     }
 
     @ParameterizedTest
