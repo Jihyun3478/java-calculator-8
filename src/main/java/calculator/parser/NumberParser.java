@@ -6,10 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NumberParser {
+    private static final String LF = "\n";
     private static final String CUSTOM_DELIMITER_REGEX = "//(.)\\n";
 
     public static List<Integer> parseNumbers(String input) {
-        input = input.replace("\\n", "\n");
+        input = input.replace("\\n", LF);
 
         if (isCustomDelimiter(input)) {
             return parseWithCustomDelimiter(input);
@@ -26,14 +27,14 @@ public class NumberParser {
             delimiter = matcher.group(1);
         }
 
-        int delimiterIndex = input.indexOf("\n");
+        int delimiterIndex = input.indexOf(LF);
         String numbers = input.substring(delimiterIndex + 1);
 
         return splitToList(numbers, delimiter);
     }
 
     private static boolean isCustomDelimiter(String input) {
-        return input.contains("//") && input.contains("\n");
+        return input.contains("//") && input.contains(LF);
     }
 
     private static List<Integer> splitToList(String input, String regex) {
