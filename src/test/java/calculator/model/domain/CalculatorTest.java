@@ -19,10 +19,9 @@ public class CalculatorTest {
         assertEquals(6, result);
     }
 
-    @Test
-    @DisplayName("커스텀 구분자로 숫자를 추출해 합을 계산한다.")
-    public void 커스텀_구분자로_추출해_계산() {
-        String input = "//;\n4;5;6";
+    @ParameterizedTest
+    @ValueSource(strings = {"//;\n4;5;6", "//.\n4.5.6"})
+    public void 커스텀_구분자로_추출해_계산(String input) {
         Calculator calculator = Calculator.from(input);
         int result = calculator.calculate();
 

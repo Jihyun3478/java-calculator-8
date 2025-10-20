@@ -30,7 +30,7 @@ public class NumberParser {
         int delimiterIndex = input.indexOf(LF);
         String numbers = input.substring(delimiterIndex + 1);
 
-        return splitToList(numbers, delimiter);
+        return splitToList(numbers, "[" + delimiter + "]");
     }
 
     private static boolean isCustomDelimiter(String input) {
