@@ -1,18 +1,17 @@
 package calculator.parser;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class NumberParser {
     private static final String CUSTOM_DELIMITER_REGEX = "//(.)\\n";
-    private static final String NUMBER_REGEX = "[0-9]+";
-    
+
     public static List<Integer> parseNumbers(String input) {
         input = input.replace("\\n", "\n");
 
-        if (input.contains("//") && input.contains("\n")) {
+        if (isCustomDelimiter(input)) {
             return parseWithCustomDelimiter(input);
         }
         return splitToList(input, "[,:]");
@@ -30,23 +29,18 @@ public class NumberParser {
         int delimiterIndex = input.indexOf("\n");
         String numbers = input.substring(delimiterIndex + 1);
 
-        return splitToList(numbers, "[" + delimiter + "]");
+        return splitToList(numbers, delimiter);
+    }
+
+    private static boolean isCustomDelimiter(String input) {
+        return input.contains("//") && input.contains("\n");
     }
 
     private static List<Integer> splitToList(String input, String regex) {
-        String[] tokens = input.splitWithDelimiters(regex, 0);
+        String[] tokens = input.split(regex);
 
-        return IntStream.range(0, tokens.length)
-            .filter(i -> isIndexEven(i) && isNumber(tokens[i]))
-            .mapToObj(i -> Integer.parseInt(tokens[i]))
+        return Arrays.stream(tokens)
+            .map(Integer::parseInt)
             .toList();
-    }
-
-    private static boolean isIndexEven(int i) {
-        return i % 2 == 0;
-    }
-
-    private static boolean isNumber(String split) {
-        return split.matches(NUMBER_REGEX);
     }
 }
