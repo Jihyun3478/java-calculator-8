@@ -1,5 +1,7 @@
 package calculator.parser;
 
+import static calculator.constant.ErrorMessage.*;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,11 +24,11 @@ public class NumberParser {
         Pattern pattern = Pattern.compile(CUSTOM_DELIMITER_REGEX);
         Matcher matcher = pattern.matcher(input);
 
-        String delimiter = "";
-        while (matcher.find()) {
-            delimiter = matcher.group(1);
+        if (!matcher.find()) {
+            throw new IllegalArgumentException(INVALID_INPUT.getMessage());
         }
 
+        String delimiter = matcher.group(1);
         int delimiterIndex = input.indexOf(LF);
         String numbers = input.substring(delimiterIndex + 1);
 
@@ -41,7 +43,7 @@ public class NumberParser {
         String[] tokens = input.split(regex);
 
         return Arrays.stream(tokens)
-            .filter(t -> t.matches("\\d+"))
+            .filter(token -> token.matches("\\d+"))
             .map(Integer::parseInt)
             .toList();
     }
