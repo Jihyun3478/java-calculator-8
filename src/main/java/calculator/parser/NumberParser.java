@@ -41,6 +41,7 @@ public class NumberParser {
         String[] tokens = input.split(regex);
 
         return Arrays.stream(tokens)
+            .filter(t -> t.matches("\\d+"))
             .map(Integer::parseInt)
             .toList();
     }
